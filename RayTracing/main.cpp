@@ -1,6 +1,8 @@
 #include<dxlib.h>
 #include <math.h>
 #include"Geometry.h"
+#include "Plane.h"
+#include "Sphere.h"
 const int screen_width = 640;
 const int screen_height = 480;
 
@@ -38,11 +40,10 @@ Vector3 RefrectVector(const Vector3& in, const Vector3& normal)
 	return in - normal * Dot(normal, in) * 2;
 }
 
-bool IsHitRayAndObject(const Position3& eye,const Vector3& ray, const Plane& pl,float& t)
+bool IsHitRayAndObject(const Position3& eye,const Vector3& ray, Plane& pl,float& t)
 {
-	auto plane = pl;
 	auto r_ray = ray * -1;
-	if (Dot(r_ray, plane.normal.Normalized()) > 0)
+	if (Dot(r_ray, pl.GetNormal().Normalized()) > 0)
 	{
 		t = (plane.offset - Dot(eye, plane.normal.Normalized())) / Dot(r_ray, plane.normal.Normalized());
 		return true;
@@ -98,7 +99,7 @@ Vector3 GetCheckerColor(Position3 pos,float x)
 ///レイトレーシング
 ///@param eye 視点座標
 ///@param sphere 球オブジェクト(そのうち複数にする)
-void RayTracing(const Position3& eye,const Sphere& sphere,const Plane& plane) {
+void RayTracing(const Position3& eye,Sphere& sphere,Plane& plane) {
 	for (int y = 0; y < screen_height; ++y) {//スクリーン縦方向
 		for (int x = 0; x < screen_width; ++x) {//スクリーン横方向
 			Position3 screenPos(x-screen_width/2, screen_height/2-y, 0);
@@ -130,7 +131,7 @@ void RayTracing(const Position3& eye,const Sphere& sphere,const Plane& plane) {
 			if (IsHitRayAndObject(eye,ray,sphere, t))
 			{
 				sPos = eye + ray * t;
-				normal = sPos - sphere.pos;
+				normal = sPos - sphere.GetPos();
 				normal.Normalize();
 				Vector3 albedo = { 1.0f,1.0f,1.0f };
 				auto diffuse = Dot(normal, toLight);
@@ -177,7 +178,7 @@ int main() {
 		{
 			x-=10;
 		}
-		RayTracing(Vector3(0, 100, 300), Sphere(100, Position3(x, y, z)), Plane(Vector3(0, 1, 0), -50));
+		RayTracing(Vector3(0, 100, 300), Sphere(Vector3(x, y, z),100), Plane(Vector3(0, 1, 0), -50));
 
 		ScreenFlip();
 	}

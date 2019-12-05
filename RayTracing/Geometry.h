@@ -62,7 +62,7 @@ struct Vector3 {
 	void Normalize();
 
 	///正規化ベクトルを返します
-	Vector3 Normalized();
+	const Vector3& Normalized();
 
 	void operator+=(const Vector3& v);
 	void operator-=(const Vector3& v);
@@ -125,4 +125,16 @@ struct Rect {
 	float Bottom() { return pos.y + h / 2; }
 	void Draw();//自分の矩形を描画する
 	void Draw(Vector2& offset);//自分の矩形を描画する(オフセット付き)
+};
+
+struct RayLine
+{
+	Vector3 start;
+	Vector3 vector;
+	RayLine(const Vector3& s, Vector3& v) :start(s), vector(v.Normalized()){}
+	void Init(const Vector3& s, const Vector3& e)
+	{
+		start = s;
+		vector = (e - s).Normalized();
+	}
 };

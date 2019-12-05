@@ -136,7 +136,7 @@ Vector3::Normalize() {
 }
 
 
-Vector3
+const Vector3&
 Vector3::Normalized() {
 	float mag = Magnitude();
 	return Vector3(x / mag, y / mag, z / mag);

@@ -1,13 +1,14 @@
 #pragma once
+#include "Object.h"
 #include "Geometry.h"
-class Sphere
+
+class Sphere:public Object
 {
 private:
-	float radius;//半径
-	Vector3 pos; //中心座標
-	
+	float _radius;//半径
+	Vector3 _pos; //中心座標
 public:
-	Sphere(Vector3& pos,float r);
+	Sphere(Vector3& pos,float r,const Material& m);
 	~Sphere();
 };
 
