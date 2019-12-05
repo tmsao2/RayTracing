@@ -10,6 +10,8 @@ private:
 public:
 	Plane(Vector3& no, float off, const Material& m);
 	~Plane();
-	bool CheckHit();
+	const Material& GetMaterial()const;
+	bool CheckHit(const RayLine& ray, Vector3& pos, Vector3& normal);
+	float DistanceFromStart(const Vector3& pos);
 };
 

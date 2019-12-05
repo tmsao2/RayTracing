@@ -1,13 +1,70 @@
-﻿  main.cpp
-d:\ゲーム開発\raytracing\raytracing\main.cpp(29): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
-d:\ゲーム開発\raytracing\raytracing\main.cpp(55): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\ゲーム開発\raytracing\raytracing\main.cpp(104): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
-d:\ゲーム開発\raytracing\raytracing\main.cpp(122): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
-d:\ゲーム開発\raytracing\raytracing\main.cpp(127): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
-d:\ゲーム開発\raytracing\raytracing\main.cpp(144): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
-d:\ゲーム開発\raytracing\raytracing\main.cpp(148): warning C4244: '引数': 'double' から 'const float' への変換です。データが失われる可能性があります。
-  コード生成しています。
-d:\ゲーム開発\raytracing\raytracing\main.cpp(94): warning C4715: 'GetCheckerColor': 値を返さないコントロール パスがあります。
-  All 23 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  コード生成が終了しました。
-  RayTracing.vcxproj -> D:\ゲーム開発\RayTracing\Release\RayTracing.exe
+﻿  Geometry.cpp
+d:\1701377\raytracing\raytracing\geometry.cpp(8): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\1701377\raytracing\raytracing\geometry.cpp(13): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+  main.cpp
+d:\1701377\raytracing\raytracing\main.cpp(21): error C2039: 'pos': 'Sphere' のメンバーではありません。
+  d:\1701377\raytracing\raytracing\sphere.h(5): note: 'Sphere' の宣言を確認してください
+d:\1701377\raytracing\raytracing\main.cpp(24): error C3536: 'c': 初期化前に使用することはできません
+d:\1701377\raytracing\raytracing\main.cpp(24): error C2665: 'Dot': 2 オーバーロードのどれも、すべての引数の型を変換できませんでした
+  d:\1701377\raytracing\raytracing\geometry.h(81): note: 'float Dot(const Vector3 &,const Vector3 &)' の可能性があります
+  d:\1701377\raytracing\raytracing\geometry.h(37): note: または 'float Dot(const Vector2 &,const Vector2 &)'
+  d:\1701377\raytracing\raytracing\main.cpp(24): note: 引数リスト '(int, const Vector3)' を一致させようとしているとき
+d:\1701377\raytracing\raytracing\main.cpp(26): error C3536: 'dot': 初期化前に使用することはできません
+d:\1701377\raytracing\raytracing\main.cpp(26): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+d:\1701377\raytracing\raytracing\main.cpp(28): error C2678: 二項演算子 '-': 型 'int' の左オペランドを扱う演算子が見つかりません (または変換できません) (新しい動作; ヘルプを参照)。
+  d:\1701377\raytracing\raytracing\geometry.h(78): note: 'Vector3 operator -(const Vector3 &,const float)' の可能性があります
+  d:\1701377\raytracing\raytracing\geometry.h(76): note: または 'Vector3 operator -(const Vector3 &,const Vector3)'
+  d:\1701377\raytracing\raytracing\geometry.h(34): note: または 'Vector2 operator -(const Vector2 &,const Vector2)'
+  d:\1701377\raytracing\raytracing\main.cpp(28): note: 引数リスト '(int, Vector3)' を一致させようとしているとき
+d:\1701377\raytracing\raytracing\main.cpp(28): error C2228: '.Magnitude' の左側はクラス、構造体、共用体でなければなりません
+d:\1701377\raytracing\raytracing\main.cpp(28): error C2039: 'radius': 'Sphere' のメンバーではありません。
+  d:\1701377\raytracing\raytracing\sphere.h(5): note: 'Sphere' の宣言を確認してください
+d:\1701377\raytracing\raytracing\main.cpp(30): error C2039: 'radius': 'Sphere' のメンバーではありません。
+  d:\1701377\raytracing\raytracing\sphere.h(5): note: 'Sphere' の宣言を確認してください
+d:\1701377\raytracing\raytracing\main.cpp(30): error C2678: 二項演算子 '-': 型 'int' の左オペランドを扱う演算子が見つかりません (または変換できません) (新しい動作; ヘルプを参照)。
+  d:\1701377\raytracing\raytracing\geometry.h(78): note: 'Vector3 operator -(const Vector3 &,const float)' の可能性があります
+  d:\1701377\raytracing\raytracing\geometry.h(76): note: または 'Vector3 operator -(const Vector3 &,const Vector3)'
+  d:\1701377\raytracing\raytracing\geometry.h(34): note: または 'Vector2 operator -(const Vector2 &,const Vector2)'
+  d:\1701377\raytracing\raytracing\main.cpp(30): note: 引数リスト '(int, Vector3)' を一致させようとしているとき
+d:\1701377\raytracing\raytracing\main.cpp(30): error C2228: '.Magnitude' の左側はクラス、構造体、共用体でなければなりません
+d:\1701377\raytracing\raytracing\main.cpp(30): error C2088: '-': struct に対して正しくありません。
+d:\1701377\raytracing\raytracing\main.cpp(31): error C3536: 'w': 初期化前に使用することはできません
+d:\1701377\raytracing\raytracing\main.cpp(31): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+d:\1701377\raytracing\raytracing\main.cpp(46): error C2039: 'GetNormal': 'Plane' のメンバーではありません。
+  d:\1701377\raytracing\raytracing\plane.h(5): note: 'Plane' の宣言を確認してください
+d:\1701377\raytracing\raytracing\main.cpp(46): error C2228: '.Normalized' の左側はクラス、構造体、共用体でなければなりません
+d:\1701377\raytracing\raytracing\main.cpp(46): error C2661: 'Dot': 1 個の引数を伴うオーバーロードされた関数はありません。
+d:\1701377\raytracing\raytracing\main.cpp(48): error C2065: 'plane': 定義されていない識別子です。
+d:\1701377\raytracing\raytracing\main.cpp(48): error C2228: '.offset' の左側はクラス、構造体、共用体でなければなりません
+  d:\1701377\raytracing\raytracing\main.cpp(48): note: 型は 'unknown-type' です。
+d:\1701377\raytracing\raytracing\main.cpp(48): error C2228: '.normal' の左側はクラス、構造体、共用体でなければなりません
+  d:\1701377\raytracing\raytracing\main.cpp(48): note: 型は 'unknown-type' です。
+d:\1701377\raytracing\raytracing\main.cpp(48): error C2228: '.Normalized' の左側はクラス、構造体、共用体でなければなりません
+d:\1701377\raytracing\raytracing\main.cpp(48): error C2661: 'Dot': 1 個の引数を伴うオーバーロードされた関数はありません。
+d:\1701377\raytracing\raytracing\main.cpp(56): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\1701377\raytracing\raytracing\main.cpp(105): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+d:\1701377\raytracing\raytracing\main.cpp(123): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+d:\1701377\raytracing\raytracing\main.cpp(128): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+d:\1701377\raytracing\raytracing\main.cpp(134): error C2039: 'GetPos': 'Sphere' のメンバーではありません。
+  d:\1701377\raytracing\raytracing\sphere.h(5): note: 'Sphere' の宣言を確認してください
+d:\1701377\raytracing\raytracing\main.cpp(145): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+d:\1701377\raytracing\raytracing\main.cpp(149): warning C4244: '引数': 'double' から 'const float' への変換です。データが失われる可能性があります。
+d:\1701377\raytracing\raytracing\main.cpp(181): error C2259: 'Sphere': 抽象クラスをインスタンス化できません。
+  d:\1701377\raytracing\raytracing\main.cpp(181): note: 次のメンバーが原因です:
+  d:\1701377\raytracing\raytracing\main.cpp(181): note: 'const Material &Object::GetMaterial(void) const': は抽象型です
+  d:\1701377\raytracing\raytracing\object.h(12): note: 'Object::GetMaterial' の宣言を確認してください
+  d:\1701377\raytracing\raytracing\main.cpp(181): note: 'bool Object::CheckHit(void)': は抽象型です
+  d:\1701377\raytracing\raytracing\object.h(13): note: 'Object::CheckHit' の宣言を確認してください
+  d:\1701377\raytracing\raytracing\main.cpp(181): note: 'float Object::DistanceFromStart(void)': は抽象型です
+  d:\1701377\raytracing\raytracing\object.h(14): note: 'Object::DistanceFromStart' の宣言を確認してください
+d:\1701377\raytracing\raytracing\main.cpp(181): error C2259: 'Plane': 抽象クラスをインスタンス化できません。
+  d:\1701377\raytracing\raytracing\main.cpp(181): note: 次のメンバーが原因です:
+  d:\1701377\raytracing\raytracing\main.cpp(181): note: 'const Material &Object::GetMaterial(void) const': は抽象型です
+  d:\1701377\raytracing\raytracing\object.h(12): note: 'Object::GetMaterial' の宣言を確認してください
+  d:\1701377\raytracing\raytracing\main.cpp(181): note: 'float Object::DistanceFromStart(void)': は抽象型です
+  d:\1701377\raytracing\raytracing\object.h(14): note: 'Object::DistanceFromStart' の宣言を確認してください
+d:\1701377\raytracing\raytracing\main.cpp(181): error C2660: 'RayTracing': 関数に 1 個の引数を指定できません。
+  Material.cpp
+  Object.cpp
+  Plane.cpp
+  Sphere.cpp

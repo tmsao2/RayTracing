@@ -10,5 +10,8 @@ private:
 public:
 	Sphere(Vector3& pos,float r,const Material& m);
 	~Sphere();
+	const Material& GetMaterial()const;
+	bool CheckHit(const RayLine& ray,Vector3& pos,Vector3& normal);
+	float DistanceFromStart(const Vector3& pos);
 };
 

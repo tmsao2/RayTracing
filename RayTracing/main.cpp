@@ -1,5 +1,6 @@
 #include<dxlib.h>
 #include <math.h>
+#include <vector>
 #include"Geometry.h"
 #include "Plane.h"
 #include "Sphere.h"
@@ -99,50 +100,48 @@ Vector3 GetCheckerColor(Position3 pos,float x)
 ///レイトレーシング
 ///@param eye 視点座標
 ///@param sphere 球オブジェクト(そのうち複数にする)
-void RayTracing(const Position3& eye,Sphere& sphere,Plane& plane) {
-	for (int y = 0; y < screen_height; ++y) {//スクリーン縦方向
-		for (int x = 0; x < screen_width; ++x) {//スクリーン横方向
-			Position3 screenPos(x-screen_width/2, screen_height/2-y, 0);
-			auto ray = screenPos - eye;			//視線ベクトル
-			auto toLight = Vector3(-0.5f,0.5f,0.5f);		//光線ベクトル
+void RayTracing(Vector3 toLight,const Vector3& eye,std::vector<Object*>& objects) 
+{
+	toLight.Normalize();
+
+	for (int y = 0; y < screen_height; ++y) 
+	{
+		for (int x = 0; x < screen_width; ++x) 
+		{
+			Vector3 ray = Vector3(x - screen_width / 2, screen_height / 2 - y, 0) - eye;
 			auto normal = Vector3(0, 0, 0);		//法線ベクトル
-			ray.Normalize();
-			toLight.Normalize();
 			float t;
+			Vector3 hitPos;
 			Vector3 sPos = Vector3(0, 0, 0);
 			Vector3 pPos = Vector3(0, 0, 0);
 			//③IsHitRay関数がTrueだったら白く塗りつぶす
 			//※塗りつぶしはDrawPixelという関数を使う。
-			if (IsHitRayAndObject(eye, ray, plane, t))
+			if (objects[1]->CheckHit(RayLine(hitPos,ray),hitPos,normal))
 			{
-				pPos = eye + (-ray)*t;
-				if(IsHitRayAndObject(pPos, toLight, sphere, t))
+				if(objects[0]->CheckHit(RayLine(eye, ray), hitPos,normal))
 				{
 					if (sPos.y >= pPos.y)
 					{
-						DrawPixelwithFloat(x, y, GetCheckerColor(pPos, x)*0.3f);
+						DrawPixelwithFloat(x, y, GetCheckerColor(hitPos, x)*0.3f);
 					}
 				}
 				else
 				{
-					DrawPixelwithFloat(x, y, GetCheckerColor(pPos, x));
+					DrawPixelwithFloat(x, y, GetCheckerColor(hitPos, x));
 				}
 			}
-			if (IsHitRayAndObject(eye,ray,sphere, t))
+			if (objects[0]->CheckHit(RayLine(eye,ray), hitPos, normal))
 			{
-				sPos = eye + ray * t;
-				normal = sPos - sphere.GetPos();
-				normal.Normalize();
+				
 				Vector3 albedo = { 1.0f,1.0f,1.0f };
 				auto diffuse = Dot(normal, toLight);
 				auto mirror = RefrectVector(toLight,normal);
-				auto reflect = RefrectVector(ray, normal);
-				auto specular = pow(max(Dot(mirror.Normalized(), ray), 0), 20);
+				auto reflect = RefrectVector(ray->vector, normal);
+				auto specular = pow(max(Dot(mirror.Normalized(), ray->vector), 0), 20);
 				reflect.Normalize();
-				if (IsHitRayAndObject(sPos, reflect, plane, t))
+				if (objects[1]->CheckHit(RayLine(hitPos,ray), hitPos, normal))
 				{
-					Vector3 rPos = eye + (-ray)*t;
-					albedo = albedo * GetCheckerColor(rPos,x);
+					albedo = albedo * GetCheckerColor(hitPos,x);
 				}
 				if (sPos.z >= pPos.z)
 				{
@@ -159,6 +158,11 @@ int main() {
 	SetMainWindowText(_T("1701377_高須真樹"));
 	DxLib_Init();
 	float x = 0, y = 50,z=0;
+	std::vector<Object*> objects;
+	objects.emplace_back(Sphere(Vector3(0, -100, -100),100,
+		Material(Vector3(1.0f, 0.7f, 0.7f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.1f, 0.1f, 0.1f), 10.0f, 1.0f)));
+	objects.emplace_back(Plane(Vector3(0, 1, 0), -200,
+		Material(Vector3(1.0f, 0.7f, 0.7f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.1f, 0.1f, 0.1f), 10.0f, 1.0f)));
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
 		ClsDrawScreen();
@@ -178,7 +182,7 @@ int main() {
 		{
 			x-=10;
 		}
-		RayTracing(Vector3(0, 100, 300), Sphere(Vector3(x, y, z),100), Plane(Vector3(0, 1, 0), -50));
+		RayTracing(Vector3(-0.5f, 0.5f, 0.5f),Vector3(0, 100, 300),objects);
 
 		ScreenFlip();
 	}
