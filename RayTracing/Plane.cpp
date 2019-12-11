@@ -21,7 +21,8 @@ bool Plane::CheckHit(const RayLine & ray, Vector3 & pos, Vector3 & normal)
 	if (Dot(r_ray, _normal.Normalized()) > 0)
 	{
 		auto t = (_offset - Dot(ray.start, _normal.Normalized())) / Dot(r_ray, _normal.Normalized());
-		pos = ray.start + ray.vector*t;
+		pos = ray.start + ray.vector * t;
+		normal = _normal.Normalized();
 		return true;
 	}
 	return false;
@@ -29,6 +30,7 @@ bool Plane::CheckHit(const RayLine & ray, Vector3 & pos, Vector3 & normal)
 
 float Plane::DistanceFromStart(const Vector3 & pos)
 {
+
 	return 0.0f;
 }
 

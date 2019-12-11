@@ -1,4 +1,5 @@
 #include "Sphere.h"
+#include <math.h>
 
 Sphere::Sphere(Vector3& pos, float r, const Material& m):Object(m)
 {
@@ -17,20 +18,17 @@ const Material & Sphere::GetMaterial() const
 
 bool Sphere::CheckHit(const RayLine & ray, Vector3 & pos, Vector3 & normal)
 {
-	//レイが正規化済みである前提で…
-	//ray=垂線へのベクトル
 	//視点から球体中心へのベクトル(視線)を作ります
-	auto c = _pos - ray.vector;		//中心へのベクトル
-								//
-								//中心から視線への内積をとります＝＞ベクトル長
-	auto dot = Dot(c, ray.start);
+	auto c = _pos - ray.start;		//中心へのベクトル
+	auto dot = Dot(c, ray.vector);	//中心から視線への内積をとります＝＞ベクトル長
 	//視線ベクトルとベクトル長をかけて、中心からの垂線下した点を求めます
-	auto vp = ray.start * dot;
+	auto vp = ray.vector * dot;
 
-	if ((c - vp).Magnitude() <= sp.radius)
+	if ((c - vp).Magnitude() <= _radius)
 	{
-		auto w = sqrt(sp.radius*sp.radius - (c - vp).Magnitude()*(c - vp).Magnitude());
-		t = (dot - w);
+		auto w = sqrt(pow(_radius,2) - (c - vp).Magnitude()*(c - vp).Magnitude());
+		pos = ray.start + ray.vector * (dot - w);
+		normal = (pos - _pos).Normalized();
 		return true;
 	}
 	return false;

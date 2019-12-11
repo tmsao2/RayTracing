@@ -15,41 +15,10 @@ const int screen_height = 480;
 ///@param ray (視点からスクリーンピクセルへのベクトル)
 ///@param sphere 球
 ///@hint レイは正規化しといたほうが使いやすいだろう
-bool IsHitRayAndObject(const Position3& eye,const Vector3& ray,const Sphere& sp,float& t) {
-	//レイが正規化済みである前提で…
-	//ray=垂線へのベクトル
-	//視点から球体中心へのベクトル(視線)を作ります
-	auto c = sp.pos - eye;		//中心へのベクトル
-	//
-	//中心から視線への内積をとります＝＞ベクトル長
-	auto dot = Dot(c, ray);
-	//視線ベクトルとベクトル長をかけて、中心からの垂線下した点を求めます
-	auto vp = ray * dot;
-
-	if ((c-vp).Magnitude()<=sp.radius)
-	{
-		auto w = sqrt(sp.radius*sp.radius - (c - vp).Magnitude()*(c - vp).Magnitude());
-		t=(dot - w);
-		return true;
-	}
-	
-	return false;
-}
 
 Vector3 RefrectVector(const Vector3& in, const Vector3& normal)
 {
 	return in - normal * Dot(normal, in) * 2;
-}
-
-bool IsHitRayAndObject(const Position3& eye,const Vector3& ray, Plane& pl,float& t)
-{
-	auto r_ray = ray * -1;
-	if (Dot(r_ray, pl.GetNormal().Normalized()) > 0)
-	{
-		t = (plane.offset - Dot(eye, plane.normal.Normalized())) / Dot(r_ray, plane.normal.Normalized());
-		return true;
-	}
-	return false;
 }
 
 void
@@ -74,22 +43,22 @@ Vector3 GetCheckerColor(Position3 pos,float x)
 	{
 		if (((int)(pos.x / 50) + (int)(pos.z / 50)) % 2)
 		{
-			return Vector3(1, 1, 0);
+			return Vector3(1, 1, 1);
 		}
 		if (!(((int)(pos.x / 50) + (int)(pos.z / 50)) % 2))
 		{
-			return Vector3(1, 0, 0);
+			return Vector3(0, 0, 0);
 		}
 	}
 	else
 	{
 		if (((int)(pos.x / 50) + (int)(pos.z / 50)) % 2)
 		{
-			return Vector3(1, 0, 0);
+			return Vector3(0, 0, 0);
 		}
 		if (!(((int)(pos.x / 50) + (int)(pos.z / 50)) % 2))
 		{
-			return Vector3(1, 1, 0);
+			return Vector3(1, 1, 1);
 		}
 	}
 	
@@ -102,13 +71,13 @@ Vector3 GetCheckerColor(Position3 pos,float x)
 ///@param sphere 球オブジェクト(そのうち複数にする)
 void RayTracing(Vector3 toLight,const Vector3& eye,std::vector<Object*>& objects) 
 {
-	toLight.Normalize();
+	auto light = toLight.Normalized();
 
 	for (int y = 0; y < screen_height; ++y) 
 	{
 		for (int x = 0; x < screen_width; ++x) 
 		{
-			Vector3 ray = Vector3(x - screen_width / 2, screen_height / 2 - y, 0) - eye;
+			Vector3 ray = (Vector3(x - screen_width / 2, screen_height / 2 - y, 0) - eye).Normalized();
 			auto normal = Vector3(0, 0, 0);		//法線ベクトル
 			float t;
 			Vector3 hitPos;
@@ -120,9 +89,9 @@ void RayTracing(Vector3 toLight,const Vector3& eye,std::vector<Object*>& objects
 			{
 				if(objects[0]->CheckHit(RayLine(eye, ray), hitPos,normal))
 				{
-					if (sPos.y >= pPos.y)
+					if (objects[0]->DistanceFromStart(eye) >= objects[1]->DistanceFromStart(eye))
 					{
-						DrawPixelwithFloat(x, y, GetCheckerColor(hitPos, x)*0.3f);
+						//DrawPixelwithFloat(x, y, GetCheckerColor(hitPos, x)*0.3f);
 					}
 				}
 				else
@@ -132,18 +101,18 @@ void RayTracing(Vector3 toLight,const Vector3& eye,std::vector<Object*>& objects
 			}
 			if (objects[0]->CheckHit(RayLine(eye,ray), hitPos, normal))
 			{
-				
-				Vector3 albedo = { 1.0f,1.0f,1.0f };
-				auto diffuse = Dot(normal, toLight);
-				auto mirror = RefrectVector(toLight,normal);
-				auto reflect = RefrectVector(ray->vector, normal);
-				auto specular = pow(max(Dot(mirror.Normalized(), ray->vector), 0), 20);
+				auto material = objects[0]->GetMaterial();
+				Vector3 albedo = { 1.0f,0.5f,0.5f };
+				auto diffuse = Dot(normal,light);
+				auto mirror = RefrectVector(light,normal);
+				auto reflect = RefrectVector(ray, normal);
+				auto specular = pow(max(Dot(mirror.Normalized(), ray), 0), 20);
 				reflect.Normalize();
-				if (objects[1]->CheckHit(RayLine(hitPos,ray), hitPos, normal))
+				if (objects[1]->CheckHit(RayLine(hitPos,reflect), hitPos, normal))
 				{
 					albedo = albedo * GetCheckerColor(hitPos,x);
 				}
-				if (sPos.z >= pPos.z)
+				if (objects[0]->DistanceFromStart(eye) >= objects[1]->DistanceFromStart(eye))
 				{
 					DrawPixelwithFloat(x, y, CalculateColor(albedo, diffuse, specular, 0));
 				}
@@ -157,32 +126,16 @@ int main() {
 	SetGraphMode(screen_width, screen_height, 32);
 	SetMainWindowText(_T("1701377_高須真樹"));
 	DxLib_Init();
-	float x = 0, y = 50,z=0;
 	std::vector<Object*> objects;
-	objects.emplace_back(Sphere(Vector3(0, -100, -100),100,
+	objects.push_back(new Sphere(Vector3(0, 0, -200),100,
 		Material(Vector3(1.0f, 0.7f, 0.7f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.1f, 0.1f, 0.1f), 10.0f, 1.0f)));
-	objects.emplace_back(Plane(Vector3(0, 1, 0), -200,
+	objects.push_back(new Plane(Vector3(0, 1, 0), -100,
 		Material(Vector3(1.0f, 0.7f, 0.7f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.1f, 0.1f, 0.1f), 10.0f, 1.0f)));
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
 		ClsDrawScreen();
-		if (CheckHitKey(KEY_INPUT_UP))
-		{
-			y+=10;
-		}
-		if (CheckHitKey(KEY_INPUT_DOWN))
-		{
-			y-=10;
-		}
-		if (CheckHitKey(KEY_INPUT_RIGHT))
-		{
-			x+=10;
-		}
-		if (CheckHitKey(KEY_INPUT_LEFT))
-		{
-			x-=10;
-		}
-		RayTracing(Vector3(-0.5f, 0.5f, 0.5f),Vector3(0, 100, 300),objects);
+		
+		RayTracing(Vector3(-0.5f, 0.5f, 0.5f),Vector3(0, 0, 300),objects);
 
 		ScreenFlip();
 	}
