@@ -30,7 +30,7 @@ bool Plane::CheckHit(const RayLine & ray, Vector3 & pos, Vector3 & normal)
 
 float Plane::DistanceFromStart(const Vector3 & pos)
 {
-
-	return 0.0f;
+	
+	return _offset;
 }
 

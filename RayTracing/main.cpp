@@ -1,4 +1,4 @@
-#include<dxlib.h>
+#include <DxLib.h>
 #include <math.h>
 #include <vector>
 #include"Geometry.h"
@@ -85,9 +85,9 @@ void RayTracing(Vector3 toLight,const Vector3& eye,std::vector<Object*>& objects
 			Vector3 pPos = Vector3(0, 0, 0);
 			//‡BIsHitRayŠÖ”‚ªTrue‚¾‚Á‚½‚ç”’‚­“h‚è‚Â‚Ô‚·
 			//¦“h‚è‚Â‚Ô‚µ‚ÍDrawPixel‚Æ‚¢‚¤ŠÖ”‚ðŽg‚¤B
-			if (objects[1]->CheckHit(RayLine(hitPos,ray),hitPos,normal))
+			if (objects[1]->CheckHit(RayLine(eye,ray),hitPos,normal))
 			{
-				if(objects[0]->CheckHit(RayLine(eye, ray), hitPos,normal))
+				if(objects[0]->CheckHit(RayLine(hitPos, ray), hitPos,normal))
 				{
 					if (objects[0]->DistanceFromStart(eye) >= objects[1]->DistanceFromStart(eye))
 					{
@@ -98,6 +98,10 @@ void RayTracing(Vector3 toLight,const Vector3& eye,std::vector<Object*>& objects
 				{
 					DrawPixelwithFloat(x, y, GetCheckerColor(hitPos, x));
 				}
+			}
+			else
+			{
+				DrawPixelwithFloat(x, y, Vector3(0.3f, 0.5f, 0.8f));
 			}
 			if (objects[0]->CheckHit(RayLine(eye,ray), hitPos, normal))
 			{
@@ -129,13 +133,13 @@ int main() {
 	std::vector<Object*> objects;
 	objects.push_back(new Sphere(Vector3(0, 0, -200),100,
 		Material(Vector3(1.0f, 0.7f, 0.7f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.1f, 0.1f, 0.1f), 10.0f, 1.0f)));
-	objects.push_back(new Plane(Vector3(0, 1, 0), -100,
+	objects.push_back(new Plane(Vector3(0, 1, 0), -300,
 		Material(Vector3(1.0f, 0.7f, 0.7f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.1f, 0.1f, 0.1f), 10.0f, 1.0f)));
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
 		ClsDrawScreen();
 		
-		RayTracing(Vector3(-0.5f, 0.5f, 0.5f),Vector3(0, 0, 300),objects);
+		RayTracing(Vector3(-0.5f, 0.5f, 0.5f),Vector3(0, 100, 500),objects);
 
 		ScreenFlip();
 	}
